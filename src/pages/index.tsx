@@ -1,25 +1,26 @@
 import Link from "next/link";
 import { Tab } from "@headlessui/react";
-import { useRef } from "react";
-import Masonry from "react-masonry-css";
+
 import classNames from "classnames";
 import Image from "next/image";
-import type { LightGallery } from "lightgallery/lightgallery";
-import LightGalleryComponent from "lightgallery/react";
 
+import Gallery from "../../components/Gallery";
 import "lightgallery/css/lightgallery.css";
 import "lightgallery/css/lg-zoom.css";
 import "lightgallery/css/lg-thumbnail.css";
-
-import lgThumbnail from "lightgallery/plugins/thumbnail";
-import lgZoom from "lightgallery/plugins/zoom";
+import type { Photo } from "../../types";
 
 import bg from "../../public/bottom_bg.jpg";
-import Car1 from "../../public/Car-1.jpg";
-import Car2 from "../../public/Car-2.jpg";
-import Car3 from "../../public/Car-3.jpg";
-import Car4 from "../../public/Car-4.jpg";
-import Car5 from "../../public/Car-5.jpg";
+
+import { GetStaticProps } from "next";
+import { createApi } from "unsplash-js";
+import nodeFetch from "node-fetch";
+import { getImages } from "../../utils/image-util";
+
+// type CreateApi = ReturnType<typeof createApi>;
+// type SearchPhotos = CreateApi["search"];
+// type GetPhotos = SearchPhotos["getPhotos"];
+// type PhotoResponse = Awaited<ReturnType<GetPhotos>>;
 
 const tabs = [
 	{
@@ -36,10 +37,30 @@ const tabs = [
 	},
 ];
 
-const images = [Car1, Car2, Car3, Car4, Car5];
+type HomeProps = {
+	people: Photo[];
+	nature: Photo[];
+};
 
-export default function Home() {
-	const lightboxRef = useRef<LightGallery | null>(null);
+export const getStaticProps: GetStaticProps<any> = async () => {
+	const unsplash = createApi({
+		accessKey: process.env.UNSPLASH_ACCESS_KEY!,
+		fetch: nodeFetch as unknown as typeof fetch,
+	});
+
+	const results = await Promise.all([
+		getImages(unsplash, "people"),
+		getImages(unsplash, "nature"),
+	]);
+	return Promise.resolve({
+		props: {
+			people: results[0],
+			nature: results[1],
+		},
+	});
+};
+
+export default function Home({ people, nature }: HomeProps) {
 	return (
 		<div className="h-full bg-black  overflow-auto">
 			<Image
@@ -79,42 +100,15 @@ export default function Home() {
 						</Tab.List>
 						<Tab.Panels className="h-full  max-w-[900px] w-full p-2 sm:p-4 my-6">
 							<Tab.Panel className="overflow-auto">
-								<Masonry
-									breakpointCols={2}
-									className="flex gap-4"
-									columnClassName=""
-								>
-									{images.map((image, idx) => (
-										<Image
-											key={image.src}
-											src={image}
-											alt="placeholder"
-											className="my-5 cursor-pointer transform hover:scale-105 hover:opacity-80"
-											placeholder="blur"
-											onClick={() => {
-												lightboxRef.current?.openGallery(idx);
-											}}
-										/>
-									))}
-								</Masonry>
-								<LightGalleryComponent
-									onInit={(ref) => {
-										if (ref) {
-											lightboxRef.current = ref.instance;
-										}
-									}}
-									speed={500}
-									plugins={[lgThumbnail, lgZoom]}
-									dynamic
-									dynamicEl={images.map((image) => ({
-										src: image.src,
-										thumb: image.src,
-									}))}
-								/>
+								<Gallery photos={[...people, ...nature]} />
 							</Tab.Panel>
 
-							<Tab.Panel>Content 2</Tab.Panel>
-							<Tab.Panel>Content 3</Tab.Panel>
+							<Tab.Panel>
+								<Gallery photos={people} />
+							</Tab.Panel>
+							<Tab.Panel>
+								<Gallery photos={nature} />
+							</Tab.Panel>
 						</Tab.Panels>
 					</Tab.Group>
 				</div>
