@@ -9,5 +9,3 @@ async function getDataUrl(url: string) {
 
 	return lqipData.metadata.dataURIBase64;
 }
-
-getDataUrl(imgUrl).then();
