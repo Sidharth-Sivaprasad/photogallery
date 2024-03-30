@@ -13,14 +13,21 @@ async function getDataUrl(url: string) {
 
 export async function getImages(
 	cli: ReturnType<typeof createApi>,
-	query: string
+	collectionId: string
 ): Promise<Photo[]> {
 	const mappedPhotos: Photo[] = [];
-	const photos = await cli.search.getPhotos({
-		query,
-	});
+
+	const photos = await cli.collections.getPhotos({ collectionId });
+	// const photos = await cli.photos.getRandom({
+	// 	count: 10,
+	// 	query,
+	// });
 
 	if (photos.type === "success") {
+		// const responseArr = Array.isArray(photos.response)
+		// 	? photos.response
+		// 	: [photos.response];
+
 		const photosArr = photos.response.results.map((photos, idx) => ({
 			src: photos.urls.full,
 			thumb: photos.urls.thumb,

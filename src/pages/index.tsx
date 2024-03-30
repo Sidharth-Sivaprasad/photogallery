@@ -49,8 +49,8 @@ export const getStaticProps: GetStaticProps<any> = async () => {
 	});
 
 	const results = await Promise.all([
-		getImages(unsplash, "people"),
-		getImages(unsplash, "nature"),
+		getImages(unsplash, "eiqFD4mX6Qs"),
+		getImages(unsplash, "oGnbFBJeZVI"),
 	]);
 	return Promise.resolve({
 		props: {
