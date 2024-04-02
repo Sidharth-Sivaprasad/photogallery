@@ -82,26 +82,28 @@ export default function Home({ people, nature }: HomeProps) {
 			/>
 
 			<header className="fixed top-0 flex w-full z-30 justify-between items-center h-[80px] px-10">
-				<div className="text-xl">Sid's Photography Portfolio</div>
+				<div className="text-base sm:text-base md:text-xl lg:text-xl xl:text-xl">
+					Sid's Photography Portfolio
+				</div>
 				<Link
 					href="https://www.instagram.com/sid_harth_ks/"
-					className="rounded-3xl bg-white text-stone-700 px-3 py-2 hover:bg-opacity-90"
+					className="rounded-3xl bg-white text-stone-700 px-3 py-2 hover:bg-opacity-90 text-xs sm:text-base md:text-xl lg:text-xl xl:text-xl"
 					target="_blank"
 					rel="noopener noreferrer"
 				>
 					Get in Touch
 				</Link>
 			</header>
-			<main className=" relative pt-[80px] z-20">
+			<main className=" relative pt-[80px] z-20 ">
 				<div className="h-full bg-black z-20 bg-opacity-90 flex flex-col items-center">
 					<Tab.Group>
-						<Tab.List className="flex items-center gap-12 z-20">
+						<Tab.List className="flex items-center gap-12 z-20 ">
 							{tabs.map((tab) => (
 								<Tab key={tab.key} className="p-2 outline-none">
 									{({ selected }) => (
 										<span
 											className={classNames(
-												"uppercase text-lg rounded-sm ",
+												"uppercase text-base sm:text-base md:text-xl lg:text-xl xl:text-xl rounded-sm ",
 												selected ? "text-white  " : "text-stone-600"
 											)}
 										>

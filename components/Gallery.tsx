@@ -25,7 +25,11 @@ function Gallery({ photos }: GalleryProps) {
 
 	return (
 		<>
-			<Masonry breakpointCols={3} className="flex gap-4" columnClassName="">
+			<Masonry
+				breakpointCols={{ default: 3, 768: 2 }}
+				className="flex gap-4"
+				columnClassName=""
+			>
 				{photos.map((photo, idx) => {
 					// Call the random number generator function to get a new random number for each iteration
 					const randomNumber = getRandomNumber(5, 10) * 2;
