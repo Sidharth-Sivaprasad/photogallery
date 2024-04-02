@@ -16,6 +16,7 @@ import { GetStaticProps } from "next";
 import { createApi } from "unsplash-js";
 import nodeFetch from "node-fetch";
 import { getImages } from "../../utils/image-util";
+import { useMemo } from "react";
 
 // type CreateApi = ReturnType<typeof createApi>;
 // type SearchPhotos = CreateApi["search"];
@@ -33,7 +34,7 @@ const tabs = [
 	},
 	{
 		key: "Nature",
-		display: "Nature",
+		display: "Landscape",
 	},
 ];
 
@@ -48,9 +49,14 @@ export const getStaticProps: GetStaticProps<any> = async () => {
 		fetch: nodeFetch as unknown as typeof fetch,
 	});
 
+	const unsplash1 = createApi({
+		accessKey: process.env.UNSPLASH1_ACCESS_KEY!,
+		fetch: nodeFetch as unknown as typeof fetch,
+	});
+
 	const results = await Promise.all([
 		getImages(unsplash, "eiqFD4mX6Qs"),
-		getImages(unsplash, "oGnbFBJeZVI"),
+		getImages(unsplash1, "4CucR0a6Lms"),
 	]);
 	return Promise.resolve({
 		props: {
@@ -61,6 +67,11 @@ export const getStaticProps: GetStaticProps<any> = async () => {
 };
 
 export default function Home({ people, nature }: HomeProps) {
+	const allPhotos = useMemo(() => {
+		const all = [...people, ...nature];
+
+		return all.sort((a, b) => b.likes - a.likes);
+	}, [people, nature]);
 	return (
 		<div className="h-full bg-black  overflow-auto">
 			<Image
@@ -71,10 +82,12 @@ export default function Home({ people, nature }: HomeProps) {
 			/>
 
 			<header className="fixed top-0 flex w-full z-30 justify-between items-center h-[80px] px-10">
-				<div className="">Photgraphy Portfolio</div>
+				<div className="text-xl">Sid's Photography Portfolio</div>
 				<Link
-					href="#"
+					href="https://www.instagram.com/sid_harth_ks/"
 					className="rounded-3xl bg-white text-stone-700 px-3 py-2 hover:bg-opacity-90"
+					target="_blank"
+					rel="noopener noreferrer"
 				>
 					Get in Touch
 				</Link>
@@ -100,13 +113,13 @@ export default function Home({ people, nature }: HomeProps) {
 						</Tab.List>
 						<Tab.Panels className="h-full  max-w-[900px] w-full p-2 sm:p-4 my-6">
 							<Tab.Panel className="overflow-auto">
-								<Gallery photos={[...people, ...nature]} />
+								<Gallery photos={allPhotos} />
 							</Tab.Panel>
 
-							<Tab.Panel>
+							<Tab.Panel className="overflow-auto">
 								<Gallery photos={people} />
 							</Tab.Panel>
-							<Tab.Panel>
+							<Tab.Panel className="overflow-auto">
 								<Gallery photos={nature} />
 							</Tab.Panel>
 						</Tab.Panels>

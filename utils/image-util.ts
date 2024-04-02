@@ -34,6 +34,7 @@ export async function getImages(
 			width: photos.width,
 			height: photos.height,
 			alt: photos.alt_description ?? `people img - ${idx}`,
+			likes: photos.likes,
 		}));
 
 		const ArrwithUrl: Photo[] = [];
