@@ -83,7 +83,7 @@ export default function Home({ people, nature }: HomeProps) {
 
 			<header className="fixed top-0 flex w-full z-30 justify-between items-center h-[80px] px-10">
 				<div className="text-base sm:text-base md:text-xl lg:text-xl xl:text-xl">
-					Sid's Photography Portfolio
+					Sid's Photography
 				</div>
 				<Link
 					href="https://www.instagram.com/sid_harth_ks/"
